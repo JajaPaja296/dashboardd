@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .weather-widget {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .weather-city {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .weather-temp {
+            font-size: 64px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .weather-desc {
+            font-size: 18px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-widget">
+        <div class="weather-city">Načítám...</div>
+        <div class="weather-temp" id="weather-temp">--°C</div>
+        <div class="weather-desc" id="weather-desc">Načítám...</div>
+    </div>
+
+    <script>
+        (function () {
+            const tempEl = document.getElementById('weather-temp');
+            const descEl = document.getElementById('weather-desc');
+            const cityEl = document.querySelector('.weather-city');
+
+            // Souřadnice pro Uherské Hradiště
+            const lat = 49.0674;
+            const long = 17.4434;
+
+            // Pomocná funkce pro popis počasí
+            function getWeatherDescription(code) {
+                if (code === 0) return 'Jasno';
+                if (code >= 1 && code <= 3) return 'Polojasno';
+                if (code >= 45 && code <= 48) return 'Mlha';
+                if (code >= 51 && code <= 67) return 'Déšť';
+                if (code >= 71 && code <= 77) return 'Sníh';
+                if (code >= 95) return 'Bouřka';
+                return 'Neznámé';
+            }
+
+            // Získání počasí (Open-Meteo API)
+            const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current_weather=true`;
+            fetch(weatherUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const temp = data.current_weather.temperature;
+                    const code = data.current_weather.weathercode;
+                    tempEl.textContent = `${temp}°C`;
+                    descEl.textContent = getWeatherDescription(code);
+                });
+
+            // Získání názvu města (Reverse Geocoding)
+            const geoUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${long}&localityLanguage=cs`;
+            fetch(geoUrl)
+                .then(response => response.json())
+                .then(data => {
+                    cityEl.textContent = data.city || data.locality || 'Neznámé místo';
+                });
+        })();
+    </script>
+</body>
+</html>

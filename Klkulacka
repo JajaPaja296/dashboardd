@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .simple-calc {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 280px;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        #calc-input {
+            grid-column: span 4;
+            padding: 15px;
+            font-size: 24px;
+            text-align: right;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #calc-input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+
+        .buttons {
+            display: contents;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #f0f0f0;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #e0e0e0;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button.op {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        button.op:hover {
+            background: #764ba2;
+        }
+
+        button.clear {
+            grid-column: span 4;
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+        }
+
+        button.clear:hover {
+            background: #e03c3c;
+        }
+
+        button.equals {
+            grid-column: span 4;
+            background: #51cf66;
+            color: white;
+            padding: 15px;
+            font-size: 20px;
+        }
+
+        button.equals:hover {
+            background: #37b24d;
+        }
+    </style>
+</head>
+<body>
+    <div class="simple-calc">
+        <input type="text" id="calc-input" readonly>
+        <div class="buttons">
+            <!-- Číselná tlačítka -->
+            <button onclick="calcAppend('7')">7</button>
+            <button onclick="calcAppend('8')">8</button>
+            <button onclick="calcAppend('9')">9</button>
+            <button onclick="calcAppend('/')" class="op">÷</button>
+
+            <button onclick="calcAppend('4')">4</button>
+            <button onclick="calcAppend('5')">5</button>
+            <button onclick="calcAppend('6')">6</button>
+            <button onclick="calcAppend('*')" class="op">×</button>
+
+            <button onclick="calcAppend('1')">1</button>
+            <button onclick="calcAppend('2')">2</button>
+            <button onclick="calcAppend('3')">3</button>
+            <button onclick="calcAppend('-')" class="op">−</button>
+
+            <button onclick="calcAppend('0')">0</button>
+            <button onclick="calcAppend('.')">.</button>
+            <button onclick="calcResult()" class="equals">=</button>
+            <button onclick="calcAppend('+')" class="op">+</button>
+
+            <button onclick="calcClear()" class="clear">Vymazat</button>
+        </div>
+    </div>
+
+    <script>
+        // Přidání znaku na displej
+        window.calcAppend = function(val) {
+            const input = document.getElementById('calc-input');
+            input.value += val;
+        };
+
+        // Výpočet výsledku
+        window.calcResult = function() {
+            try {
+                const input = document.getElementById('calc-input');
+                input.value = eval(input.value);
+            } catch (e) {
+                alert('Chyba: Neplatný výraz');
+                document.getElementById('calc-input').value = '';
+            }
+        };
+
+        // Vymazání displeje
+        window.calcClear = function() {
+            document.getElementById('calc-input').value = '';
+        };
+    </script>
+</body>
+</html>
