@@ -1,0 +1,73 @@
+<div class="weather-widget">
+<!-- Místo pro název města -->
+<div class="weather-city">Načítám...</div>
+<!-- Místo pro teplotu -->
+<div class="weather-temp" id="weather-temp">--°C</div>
+<!-- Místo pro popis (jasno, prší...) -->
+<div class="weather-desc" id="weather-desc">Načítám...</div>
+
+</div>
+
+<style>
+	.weather-widget{max-width:260px;padding:18px 6px;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif}
+	.weather-city{font-weight:700;margin-bottom:6px;font-size:16px}
+	.weather-temp{font-size:48px;font-weight:800;line-height:1;margin:0;text-align:left}
+	.weather-desc{color:#333;margin-top:6px;font-size:14px}
+	/* small responsive tweak */
+	@media (max-width:420px){.weather-temp{font-size:36px}}
+</style>
+
+<script>
+(function () {
+	const tempEl = document.getElementById('weather-temp');
+	const descEl = document.getElementById('weather-desc');
+	const cityEl = document.querySelector('.weather-city');
+
+	// Souřadnice pro Prahu (upravit podle potřeby)
+	const lat = 50.0755;
+	const long = 14.4378;
+
+	// Funkce pro převod kódu počasí na text
+	function getWeatherDescription(code) {
+		if (code === 0) return 'Jasno';
+		if (code >= 1 && code <= 3) return 'Polojasno';
+		if (code >= 45 && code <= 48) return 'Mlha';
+		if (code >= 51 && code <= 67) return 'Déšť';
+		if (code >= 71 && code <= 77) return 'Sníh';
+		if (code >= 95) return 'Bouřka';
+		return 'Neznámé';
+	}
+
+	// Získání aktuálního počasí (Open-Meteo)
+	const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current_weather=true`;
+	fetch(weatherUrl)
+		.then(response => response.json())
+		.then(data => {
+			if (data && data.current_weather) {
+				const temp = data.current_weather.temperature;
+				const code = data.current_weather.weathercode;
+				tempEl.textContent = `${temp}°C`;
+				descEl.textContent = getWeatherDescription(code);
+			} else {
+				tempEl.textContent = '--°C';
+				descEl.textContent = 'Nepodařilo se načíst počasí';
+			}
+		})
+		.catch(() => {
+			tempEl.textContent = '--°C';
+			descEl.textContent = 'Chyba při načítání';
+		});
+
+	// Reverse geocoding pro získání názvu města (BigDataCloud)
+	const geoUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${long}&localityLanguage=cs`;
+	fetch(geoUrl)
+		.then(response => response.json())
+		.then(data => {
+			cityEl.textContent = data.city || data.locality || data.principalSubdivision || 'Neznámé místo';
+		})
+		.catch(() => {
+			cityEl.textContent = 'Neznámé místo';
+		});
+
+})();
+</script>
