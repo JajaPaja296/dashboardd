@@ -1,0 +1,185 @@
+<div class="timetable-widget">
+  <h3>Rozvrh hodin</h3>
+  
+  <table class="timetable">
+    <thead>
+      <tr>
+        <th class="hour">Hod</th>
+        <th class="time-slot">0<br><small>7:05–7:50</small></th>
+        <th class="time-slot">1<br><small>8:00–8:45</small></th>
+        <th class="time-slot">2<br><small>8:55–9:40</small></th>
+        <th class="time-slot">3<br><small>10:00–10:45</small></th>
+        <th class="time-slot">4<br><small>10:55–11:40</small></th>
+        <th class="time-slot">5<br><small>11:50–12:35</small></th>
+        <th class="time-slot">6<br><small>12:45–13:30</small></th>
+        <th class="time-slot">7<br><small>13:40–14:25</small></th>
+        <th class="time-slot">8<br><small>14:35–15:20</small></th>
+        <th class="time-slot">9<br><small>15:30–16:15</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="day">po<br><small>8.12.</small></td>
+        <td class="empty"></td>
+        <td class="classroom">PG<br><span class="teacher">SUO</span></td>
+        <td class="classroom">PG<br><span class="teacher">SUO</span></td>
+        <td class="classroom">AJ<br><span class="teacher">DOJ</span></td>
+        <td class="classroom highlight">SV<br><span class="teacher">JAD</span></td>
+        <td class="classroom"></td>
+        <td class="classroom">WEB<br><span class="teacher">SAD</span></td>
+        <td class="classroom">WEB<br><span class="teacher">SAD</span></td>
+        <td class="empty"></td>
+        <td class="empty"></td>
+      </tr>
+      <tr>
+        <td class="day">út<br><small>9.12.</small></td>
+        <td class="empty"></td>
+        <td class="classroom">F<br><span class="teacher">SOE</span></td>
+        <td class="classroom">M<br><span class="teacher">KAM</span></td>
+        <td class="classroom">PS<br><span class="teacher">MAD</span></td>
+        <td class="classroom">SV<br><span class="teacher">JAD</span></td>
+        <td class="classroom">ČJL<br><span class="teacher">NE</span></td>
+        <td class="empty"></td>
+        <td class="classroom">AJ<br><span class="teacher">ARE</span></td>
+        <td class="classroom">ZAE<br><span class="teacher">RED</span></td>
+        <td class="empty"></td>
+      </tr>
+      <tr>
+        <td class="day">st<br><small>10.12.</small></td>
+        <td class="empty"></td>
+        <td class="classroom">PRG<br><span class="teacher">MAR</span></td>
+        <td class="classroom">PRG<br><span class="teacher">MAR</span></td>
+        <td class="classroom">PRG<br><span class="teacher">MAR</span></td>
+        <td class="classroom">HW<br><span class="teacher">MAR</span></td>
+        <td class="classroom">PP<br><span class="teacher">SOE</span></td>
+        <td class="empty"></td>
+        <td class="classroom">AJ<br><span class="teacher">DOJ</span></td>
+        <td class="classroom">WEB<br><span class="teacher">SAD</span></td>
+        <td class="empty"></td>
+      </tr>
+      <tr>
+        <td class="day">čt<br><small>11.12.</small></td>
+        <td class="empty"></td>
+        <td class="empty"></td>
+        <td class="classroom">M<br><span class="teacher">KAM</span></td>
+        <td class="classroom">PP<br><span class="teacher">SOE</span></td>
+        <td class="classroom">ČJL<br><span class="teacher">NE</span></td>
+        <td class="classroom">M<br><span class="teacher">KAM</span></td>
+        <td class="empty"></td>
+        <td class="classroom">Tv<br><span class="teacher">ZAM</span></td>
+        <td class="classroom">Tv<br><span class="teacher">ZAM</span></td>
+        <td class="empty"></td>
+      </tr>
+      <tr>
+        <td class="day">pá<br><small>12.12.</small></td>
+        <td class="empty"></td>
+        <td class="classroom">OSV<br><span class="teacher">MAR</span></td>
+        <td class="classroom">OSV<br><span class="teacher">MAR</span></td>
+        <td class="classroom">A3D<br><span class="teacher">KOZ</span></td>
+        <td class="classroom">LVK<br><span class="teacher">NE</span></td>
+        <td class="classroom">PS<br><span class="teacher">MAD</span></td>
+        <td class="empty"></td>
+        <td class="empty"></td>
+        <td class="empty"></td>
+        <td class="empty"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .timetable-widget {
+    font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    padding: 16px;
+    overflow-x: auto;
+  }
+
+  .timetable-widget h3 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .timetable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    background: white;
+  }
+
+  .timetable thead {
+    background: #f0f0f0;
+  }
+
+  .timetable th {
+    padding: 6px 4px;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #ddd;
+    color: #333;
+  }
+
+  .timetable th.hour {
+    background: #f0f0f0;
+    width: 60px;
+  }
+
+  .timetable th.time-slot {
+    min-width: 70px;
+  }
+
+  .timetable th small {
+    display: block;
+    font-size: 9px;
+    font-weight: 400;
+    color: #666;
+  }
+
+  .timetable td {
+    padding: 6px 4px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    height: 50px;
+  }
+
+  .timetable td.day {
+    background: #f8f8f8;
+    font-weight: 600;
+    color: #0099ff;
+    width: 60px;
+  }
+
+  .timetable td.day small {
+    display: block;
+    font-size: 9px;
+    color: #666;
+    font-weight: 400;
+  }
+
+  .timetable td.empty {
+    background: #fafafa;
+  }
+
+  .timetable td.classroom {
+    background: white;
+    font-weight: 600;
+    color: #0099ff;
+  }
+
+  .timetable td.classroom.highlight {
+    background: #c5dff8;
+  }
+
+  .timetable td.classroom .teacher {
+    display: block;
+    font-size: 9px;
+    color: #999;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .timetable tbody tr:hover {
+    background: #f9f9f9;
+  }
+</style>
