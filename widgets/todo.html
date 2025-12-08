@@ -1,0 +1,173 @@
+<div class="todo-widget" x-data="todoWidget()">
+  <h3>Úkoly</h3>
+
+  <!-- Vstupní pole pro přidávání nových úkolů -->
+  <div class="input-group">
+    <input
+      type="text"
+      x-model="newTodo"
+      @keyup.enter="add()"
+      placeholder="Nový úkol..."
+    >
+    <button @click="add()">+</button>
+  </div>
+
+  <!-- Seznam úkolů -->
+  <ul>
+    <template x-for="todo in todos" :key="todo.id">
+      <li :class="{ 'completed': todo.completed }">
+        <div class="todo-item-content">
+          <input
+            type="checkbox"
+            x-model="todo.completed"
+          >
+          <span x-text="todo.text"></span>
+        </div>
+        <button @click="remove(todo.id)" class="delete-btn">&times;</button>
+      </li>
+    </template>
+  </ul>
+</div>
+
+<style>
+  .todo-widget {
+    font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    max-width: 320px;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fafafa;
+  }
+
+  .todo-widget h3 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: #333;
+  }
+
+  .input-group,
+  .todo-widget li,
+  .todo-item-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .input-group {
+    margin-bottom: 12px;
+  }
+
+  .input-group input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .input-group input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  }
+
+  .input-group button {
+    padding: 6px 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .input-group button:hover {
+    background: #0056b3;
+  }
+
+  .input-group button:active {
+    background: #004085;
+  }
+
+  .todo-widget ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .todo-widget li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    justify-content: space-between;
+  }
+
+  .todo-widget li:last-child {
+    border-bottom: none;
+  }
+
+  .todo-item-content {
+    flex: 1;
+  }
+
+  .todo-item-content input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+  }
+
+  .todo-item-content span {
+    word-break: break-word;
+    color: #333;
+  }
+
+  .completed span {
+    text-decoration: line-through;
+    color: #999;
+  }
+
+  .delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .delete-btn:hover {
+    background: #c82333;
+  }
+
+  .delete-btn:active {
+    background: #bd2130;
+  }
+</style>
+
+<script>
+function todoWidget() {
+  return {
+    newTodo: '',
+    todos: JSON.parse(localStorage.getItem('todos') || '[]'),
+    init() {
+      this.$watch('todos', (value) => {
+        localStorage.setItem('todos', JSON.stringify(value));
+      });
+    },
+    add() {
+      if (this.newTodo.trim() === '') return;
+      this.todos.push({
+        id: Date.now(),
+        text: this.newTodo,
+        completed: false
+      });
+      this.newTodo = '';
+    },
+    remove(id) {
+      this.todos = this.todos.filter(todo => todo.id !== id);
+    }
+  };
+}
+</script>
