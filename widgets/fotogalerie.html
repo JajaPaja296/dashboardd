@@ -1,14 +1,11 @@
 <div class="gallery-widget">
   <h3>Galerie</h3>
   
-  <div class="gallery-main">
-    <img id="gallery-image" src="" alt="Obrázek">
-  </div>
-  
-  <div class="gallery-nav">
-    <button id="prev-btn">← Předchozí</button>
-    <span id="counter">1 / 4</span>
-    <button id="next-btn">Další →</button>
+  <div class="gallery-grid">
+    <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/542000/542607-singapore.jpg" alt="Singapur 1">
+    <img src="https://images.pexels.com/photos/777059/pexels-photo-777059.jpeg?cs=srgb&dl=pexels-kin-pastor-251088-777059.jpg&fm=jpg" alt="Krajina">
+    <img src="https://www.telegraph.co.uk/content/dam/travel/Spark/singapore-airlines/gardens-by-the-bay-singapore.jpg?impolicy=OG-Standard" alt="Zahrady">
+    <img src="https://static.independent.co.uk/2024/03/18/12/Lazarus%20credit%20httpswww.escapeatlazarus%20%282%29.jpg?quality=75&width=640&crop=3%3A2%2Csmart&auto=webp" alt="Resort">
   </div>
 </div>
 
@@ -23,77 +20,23 @@
     color: #333;
   }
 
-  .gallery-main {
-    width: 100%;
-    height: 120px;
-    background: #f0f0f0;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 10px;
-  }
-
-  .gallery-main img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    background: #f0f0f0;
-  }
-
-  .gallery-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
-    font-size: 12px;
   }
 
-  .gallery-nav button {
-    padding: 6px 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
+  .gallery-grid img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  .gallery-nav button:hover {
-    background: #0056b3;
-  }
-
-  .gallery-nav #counter {
-    font-weight: 600;
-    color: #666;
+  .gallery-grid img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 </style>
-
-<script>
-  // === KONFIGURACE - Obrázky ===
-  const images = [
-    'https://a.travel-assets.com/findyours-php/viewfinder/images/res70/542000/542607-singapore.jpg',
-    'https://images.pexels.com/photos/777059/pexels-photo-777059.jpeg?cs=srgb&dl=pexels-kin-pastor-251088-777059.jpg&fm=jpg',
-    'https://www.telegraph.co.uk/content/dam/travel/Spark/singapore-airlines/gardens-by-the-bay-singapore.jpg?impolicy=OG-Standard',
-    'https://static.independent.co.uk/2024/03/18/12/Lazarus%20credit%20httpswww.escapeatlazarus%20%282%29.jpg?quality=75&width=640&crop=3%3A2%2Csmart&auto=webp'
-  ];
-
-  (function() {
-    let currentIndex = 0;
-    const imgEl = document.getElementById('gallery-image');
-    const counter = document.getElementById('counter');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-
-    function updateGallery(index) {
-      currentIndex = (index + images.length) % images.length;
-      imgEl.src = images[currentIndex];
-      counter.textContent = `${currentIndex + 1} / ${images.length}`;
-    }
-
-    prevBtn.addEventListener('click', () => updateGallery(currentIndex - 1));
-    nextBtn.addEventListener('click', () => updateGallery(currentIndex + 1));
-
-    updateGallery(0);
-  })();
-</script>
