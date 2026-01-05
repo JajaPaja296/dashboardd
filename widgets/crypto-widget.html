@@ -1,0 +1,76 @@
+<!-- Crypto Widget (compact)
+Minimal configurable widget showing selected crypto prices (USD) and 24h change. Data from CoinGecko (no API key).
+-->
+<div class="crypto-widget" aria-label="Crypto Widget">
+  <style>
+    .crypto-widget{font-family:Arial,Helvetica,sans-serif;max-width:320px;background:#fff;border:1px solid #e6e6e6;padding:8px;border-radius:6px}
+    .crypto-widget h3{margin:0 0 8px;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+    .crypto-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+    .crypto-item{display:flex;align-items:center;justify-content:space-between;font-size:13px}
+    .left{display:flex;align-items:center;gap:8px}
+    .symbol{font-size:20px}
+    .meta{display:flex;flex-direction:column}
+    .price{font-weight:700}
+    .change{font-size:12px}
+    .pos{color:#0a8a3f}
+    .neg{color:#d93025}
+    .small{font-size:11px;color:#666}
+    .cfg-btn{font-size:12px;padding:4px 6px;border:1px solid #e6e6e6;border-radius:4px;background:#fafafa;cursor:pointer}
+    .cfg-panel{border:1px solid #f0f0f0;padding:6px;border-radius:4px;background:#fff;margin-bottom:6px}
+    .cfg-panel input[type=number]{width:80px}
+  </style>
+  <h3>Crypto widget <button class="cfg-btn" id="cfg-toggle" title="Nastavení">⚙️</button></h3>
+  <div class="cfg-panel" id="cfg-panel" style="display:none;margin-bottom:8px">
+    <div style="font-size:12px">
+      <div class="small">Vybrat měny:</div>
+      <div id="cfg-coins" style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 8px"></div>
+      <label class="small">Interval (s): <input id="cfg-interval" type="number" min="10" max="3600" value="60" style="margin-left:6px"></label>
+      <div style="margin-top:8px"><button id="cfg-save" style="font-size:12px">Uložit</button> <button id="cfg-reset" style="font-size:12px">Obnovit</button></div>
+    </div>
+  </div>
+  <ul class="crypto-list" id="crypto-list"> </ul>
+  <div class="small" id="update-label">Aktualizace každých 60 s • Zdroj: CoinGecko</div>
+  <script>
+    (function(){
+      const allCoins = [
+        {id:'bitcoin', name:'Bitcoin', emoji:'₿', sym:'BTC'},
+        {id:'ethereum', name:'Ethereum', emoji:'Ξ', sym:'ETH'},
+        {id:'binancecoin', name:'Binance', emoji:'ⓑ', sym:'BNB'},
+        {id:'cardano', name:'Cardano', emoji:'A', sym:'ADA'},
+        {id:'ripple', name:'Ripple', emoji:'✕', sym:'XRP'}
+      ];
+      const storageKey = 'crypto_widget_v2_config';
+      const defaultConfig = { coins: ['bitcoin','ethereum','binancecoin'], interval: 60 };
+      let config = (function(){ try{ const s=localStorage.getItem(storageKey); return s?JSON.parse(s):Object.assign({},defaultConfig);}catch(e){return Object.assign({},defaultConfig);} })();
+
+      const list = document.getElementById('crypto-list');
+      const updateLabel = document.getElementById('update-label');
+      const cfgToggle = document.getElementById('cfg-toggle');
+      const cfgPanel = document.getElementById('cfg-panel');
+      const cfgCoins = document.getElementById('cfg-coins');
+      const cfgInterval = document.getElementById('cfg-interval');
+      const cfgSave = document.getElementById('cfg-save');
+      const cfgReset = document.getElementById('cfg-reset');
+      let timerId = null;
+
+      function saveConfig(){ localStorage.setItem(storageKey, JSON.stringify(config)); }
+      function buildConfigUI(){ cfgCoins.innerHTML=''; allCoins.forEach(c=>{ const id=c.id; const label=document.createElement('label'); label.style='display:inline-flex;align-items:center;gap:6px;padding:2px 6px;border-radius:4px;background:#fff;border:1px solid transparent'; label.innerHTML=`<input type="checkbox" value="${id}" ${config.coins.includes(id)?'checked':''}> <span style="font-size:13px">${c.emoji} ${c.sym}</span>`; cfgCoins.appendChild(label); }); cfgInterval.value = config.interval; }
+      function applyFromUI(){ const checked = Array.from(cfgCoins.querySelectorAll('input[type=checkbox]:checked')).map(i=>i.value); if(checked.length) config.coins = checked; const iv=parseInt(cfgInterval.value,10); config.interval = isNaN(iv)||iv<10?60:iv; }
+      function mkItem(c){ const li=document.createElement('li'); li.className='crypto-item'; li.innerHTML=`<div class="left"><div class="symbol" aria-hidden="true">${c.emoji}</div><div class="meta"><div>${c.name} <span class="small">${c.sym}</span></div><div class="price" data-id="${c.id}">—</div></div></div><div class="change" data-change="${c.id}">—</div>`; return li; }
+      function renderList(){ list.innerHTML=''; config.coins.forEach(id=>{ const c=allCoins.find(x=>x.id===id); if(c) list.appendChild(mkItem(c)); }); updateLabel.textContent = `Aktualizace každých ${config.interval} s • Zdroj: CoinGecko`; }
+      function fmtPrice(v){ if(v===null||v===undefined) return '—'; return v<1 ? '$'+v.toFixed(4) : '$'+Number(v).toLocaleString(undefined,{maximumFractionDigits:2}); }
+      function fmtChange(v){ if(v===null||v===undefined||isNaN(v)) return '—'; const sign = v>0?'+':''; return sign+v.toFixed(2)+'%'; }
+
+      async function fetchPrices(){ if(!config.coins.length) return; const ids = config.coins.join(','); const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`; try{ const res = await fetch(url); if(!res.ok) throw new Error(res.statusText||res.status); const data = await res.json(); config.coins.forEach(id=>{ const priceEl = document.querySelector(`.price[data-id="${id}"]`); const changeEl = document.querySelector(`.change[data-change="${id}"]`); const info = data[id]; const p = info && info.usd!=null ? info.usd : null; const ch = info && info.usd_24h_change!=null ? info.usd_24h_change : null; if(priceEl) priceEl.textContent = fmtPrice(p); if(changeEl){ changeEl.textContent = fmtChange(ch); changeEl.classList.remove('pos','neg'); if(ch!=null && !isNaN(ch)) changeEl.classList.add(ch>=0?'pos':'neg'); } }); }catch(err){ config.coins.forEach(id=>{ const priceEl = document.querySelector(`.price[data-id="${id}"]`); const changeEl = document.querySelector(`.change[data-change="${id}"]`); if(priceEl){ priceEl.textContent='—'; priceEl.title = `Chyba: ${err.message}`; } if(changeEl){ changeEl.textContent='—'; changeEl.title = `Chyba: ${err.message}`; } }); } }
+
+      function restartTimer(){ if(timerId) clearInterval(timerId); timerId = setInterval(fetchPrices, (config.interval||60)*1000); }
+
+      cfgToggle.addEventListener('click', ()=>{ cfgPanel.style.display = cfgPanel.style.display==='none'?'block':'none'; buildConfigUI(); });
+      cfgSave.addEventListener('click', ()=>{ applyFromUI(); saveConfig(); renderList(); fetchPrices(); restartTimer(); cfgPanel.style.display='none'; });
+      cfgReset.addEventListener('click', ()=>{ localStorage.removeItem(storageKey); config = Object.assign({}, defaultConfig); buildConfigUI(); renderList(); restartTimer(); fetchPrices(); });
+
+      // init
+      renderList(); buildConfigUI(); fetchPrices(); restartTimer();
+    })();
+  </script>
+</div>
