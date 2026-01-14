@@ -1,0 +1,12 @@
+Doporučené kroky pro commit/push:
+
+1) Přidat změny:
+   git add widgets/mood.html widgets/mood-spec.txt index.html
+
+2) Commit s popisem:
+   git commit -m "Add mood tracker widget (widgets/mood.html + spec)"
+
+3) Pushnout na váš branch:
+   git push origin <your-branch>
+
+Tip: Přidejte do PR krátký screenshot, aby kontrolor viděl vzhled widgetu.
