@@ -1,0 +1,27 @@
+Název: Mood tracker (zaznamenávač nálady)
+
+Co má dělat:
+- Zobrazit otázku: "Jak se dnes cítíš?"
+- Umožnit výběr jedné nálady z několika emoji (např. 😄 🙂 😐 😕 😡)
+- Po výběru se nálada uloží pro zvolené datum (výchozí: dnes)
+- Pro jeden den lze uložit pouze jednu náladu (uloženo přepisem)
+- Zobrazit historii za posledních 7 dní s datem a emoji
+- Umožnit zvolit jiné datum (input typu date) a náladu upravit/smazat
+
+Implementace:
+- Ukládá se do localStorage pod klíčem "mood-log" jako objekt { "YYYY-MM-DD": "moodKey", ... }
+- Minimalní, samostatný HTML soubor s vloženým CSS a JS (stejný přístup jako ostatní widgety)
+- Malý JS modul (Alpine-like pattern) zajišťuje čtení/zápis a generování historie
+
+Design a UX:
+- Přehledné tlačítka s emoji + krátkým popiskem
+- Vybraná nálada zvýrazněná (rámeček / světlé pozadí)
+- Kompaktní box vhodný do panelu (max šířka ~320-340px)
+
+Kde to nahrát:
+- Soubor přidat do `widgets/mood.html`
+- Přidat záznam do `index.html` v poli `widgets`: { name: 'mood', width: 'third' }
+
+Poznámka pro odevzdání:
+- Commit message: "Add mood tracker widget (widgets/mood.html + spec)"
+- Doporučeno: krátký screenshot widgetu pro lepší kontext v PR

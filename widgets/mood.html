@@ -1,0 +1,106 @@
+<div class="mood-widget" x-data="moodWidget()" x-init="init()">
+  <h3>Jak se dnes cítíš?</h3>
+
+  <div class="controls">
+    <input type="date" x-model="selectedDate">
+    <button class="clear" @click="remove(selectedDate)" title="Smazat náladu">Vymazat</button>
+  </div>
+
+  <div class="mood-row">
+    <template x-for="m in moods" :key="m.key">
+      <button
+        class="mood-btn"
+        :class="{ 'selected': log[selectedDate] === m.key }"
+        @click="setMood(selectedDate, m.key)">
+        <span class="emoji" x-text="m.char"></span>
+        <span class="label" x-text="m.label"></span>
+      </button>
+    </template>
+  </div>
+
+  <h4>Historie (7 dní)</h4>
+  <ul class="history">
+    <template x-for="day in history" :key="day.date">
+      <li>
+        <strong x-text="day.dateLabel"></strong>
+        <span class="hist-emoji" x-text="day.mood ? moodsByKey[day.mood].char : '—'"></span>
+      </li>
+    </template>
+  </ul>
+</div>
+
+<style>
+  .mood-widget {
+    font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    max-width: 340px;
+    padding: 14px;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #fff 0%, #fbfbfe 100%);
+  }
+
+  .mood-widget h3 { margin: 0 0 8px 0; font-size: 18px; }
+  .mood-widget h4 { margin: 12px 0 8px 0; font-size: 14px; color: #555; }
+
+  .controls { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+  .controls input[type="date"] { padding:6px 8px; border:1px solid #ccc; border-radius:6px; }
+  .controls .clear { background:#dc3545; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; }
+
+  .mood-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .mood-btn {
+    display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px; border-radius:8px; border:1px solid transparent; background:#fff; cursor:pointer; min-width:56px;
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+  .mood-btn .emoji { font-size:22px; }
+  .mood-btn .label { font-size:12px; color:#444; }
+  .mood-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(35,35,90,0.06); }
+  .mood-btn.selected { border-color:#007bff; background:linear-gradient(180deg, #f0f7ff, #eaf2ff); }
+
+  .history { list-style:none; padding:0; margin:0; display:flex; gap:8px; flex-direction:column; }
+  .history li { display:flex; justify-content:space-between; padding:6px 8px; border-radius:6px; background:#fff; border:1px solid #f0f0f0; }
+  .hist-emoji { font-size:18px; }
+</style>
+
+<script>
+function moodWidget() {
+  return {
+    selectedDate: (new Date()).toISOString().slice(0,10),
+    moods: [
+      { key: 'v-1', char: '😄', label: 'Velmi šťastný' },
+      { key: 'v', char: '🙂', label: 'Šťastný' },
+      { key: 'n', char: '😐', label: 'Neutrální' },
+      { key: 'm', char: '😕', label: 'Zamotaný' },
+      { key: 's', char: '😡', label: 'Naštvaný' }
+    ],
+    moodsByKey: {},
+    log: JSON.parse(localStorage.getItem('mood-log') || '{}'),
+    init() {
+      // build lookup
+      this.moodsByKey = this.moods.reduce((acc,m) => (acc[m.key]=m, acc), {});
+      // sanitize selectedDate
+      if (!this.selectedDate) this.selectedDate = (new Date()).toISOString().slice(0,10);
+      this.$watch('log', value => localStorage.setItem('mood-log', JSON.stringify(value)));
+    },
+    setMood(date, key) {
+      if (!date) return;
+      this.log = { ...this.log, [date]: key };
+    },
+    remove(date) {
+      if (this.log && this.log[date]) {
+        const copy = { ...this.log };
+        delete copy[date];
+        this.log = copy;
+      }
+    },
+    get history() {
+      const out = [];
+      for (let i=0;i<7;i++) {
+        const d = new Date(); d.setDate(d.getDate()-i);
+        const iso = d.toISOString().slice(0,10);
+        out.push({ date: iso, dateLabel: d.toLocaleDateString(), mood: this.log[iso] });
+      }
+      return out;
+    }
+  };
+}
+</script>
