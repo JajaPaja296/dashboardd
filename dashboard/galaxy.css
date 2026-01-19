@@ -1,0 +1,35 @@
+:root{
+    --body-bg: #0a0015;
+    --widget-bg: #1a0a2e;
+    --text-color: #00ff88;
+    --shadow-color: rgba(0, 255, 136, 0.15);
+    --shadow-hover: rgba(0, 255, 136, 0.3);
+    --primary-color: #00ffff;
+    --primary-color-text: #ff00ff;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0015 0%, #1a0a2e 25%, #0d0026 50%, #1a0a2e 75%, #0a0015 100%);
+}
+
+.widget {
+    background: linear-gradient(135deg, #1a0a2e 0%, #2d0a4a 50%, #1a0a2e 100%);
+    border: 1px solid #ff00ff;
+    position: relative;
+}
+
+.widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(2px 2px at 20px 30px, #ff00ff, transparent),
+        radial-gradient(2px 2px at 60px 70px, #00ffff, transparent),
+        radial-gradient(1px 1px at 50px 50px, #ffff00, transparent);
+    opacity: 0.5;
+    pointer-events: none;
+    border-radius: 10px;
+}

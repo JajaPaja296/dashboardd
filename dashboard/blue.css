@@ -1,24 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-
 :root{
-    --body-bg: #0a0e27;
-    --widget-bg: #1a1f3a;
-    --text-color: #00ffff;
-    --shadow-color: rgba(0, 255, 255, 0.15);
-    --shadow-hover: rgba(0, 255, 255, 0.3);
-    --primary-color: #00ffff;
-    --primary-color-text: #0099ff;
-}
-
-body {
-    font-family: 'Orbitron', monospace;
-}
-
-.widget {
-    border: 1px solid var(--primary-color);
-    background: linear-gradient(135deg, var(--widget-bg) 0%, rgba(0, 255, 255, 0.05) 100%);
-}
-
-button, .theme-btn {
-    font-family: 'Orbitron', monospace;
+    --body-bg: #e3f2fd;
+    --widget-bg: #ffffff;
+    --text-color: #0d47a1;
+    --shadow-color: rgba(13, 71, 161, 0.1);
+    --shadow-hover: rgba(13, 71, 161, 0.15);
+    --primary-color: #1976d2;
+    --primary-color-text: #0d47a1;
 }
