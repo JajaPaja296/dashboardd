@@ -1,9 +1,9 @@
 :root{
-    --body-bg: #000000;
-    --widget-bg: #000000;
-    --text-color: #ffffff;
-    --shadow-color: rgba(138, 67, 67, 0.1);
-    --shadow-hover: rgba(148, 33, 33, 0.2);
+    --body-bg: #0a0a0a;
+    --widget-bg: #1a1a1a;
+    --text-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --shadow-hover: rgba(0, 0, 0, 0.6);
     --primary-color: #f6d73b;
     --primary-color-text: #eb25eb;
 }
